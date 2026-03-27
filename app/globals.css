@@ -2,12 +2,26 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@font-face {
+  font-family: 'Didact Gothic';
+  src: url('/font/DidactGothic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
   --accent-orange: #fb5607;
   --accent-yellow: #ffbe0b;
-  --tracking-primary: -0.05em;
+  /* Grid system */
+  --grid-border: oklch(0.88 0 0);
+  --grid-cell-bg: oklch(1 0 0);
+  --grid-muted: oklch(0.556 0 0);
+  --grid-foreground: oklch(0.145 0 0);
+  --grid-on-foreground: oklch(0.985 0 0);
+  --tracking-primary: -0.03em;
   --tracking-secondary: -0.04em;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -48,7 +62,7 @@
   --color-foreground: var(--foreground);
   --color-accent-orange: var(--accent-orange);
   --color-accent-yellow: var(--accent-yellow);
-  --font-sans: var(--font-sans);
+  --font-sans: 'Didact Gothic', ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -90,6 +104,12 @@
 }
 
 .dark {
+  /* Grid system dark */
+  --grid-border: oklch(1 0 0 / 12%);
+  --grid-cell-bg: oklch(0.145 0 0);
+  --grid-muted: oklch(0.708 0 0);
+  --grid-foreground: oklch(0.985 0 0);
+  --grid-on-foreground: oklch(0.145 0 0);
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -133,6 +153,7 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
 }
 
@@ -140,3 +161,7 @@
   font-family: var(--font-geist-sans), sans-serif;
   letter-spacing: var(--tracking-secondary);
 }
+
+/* Grid layout utilities */
+.grid-border { border-color: var(--grid-border); }
+.grid-cell { background: var(--grid-cell-bg); border-color: var(--grid-border); }
