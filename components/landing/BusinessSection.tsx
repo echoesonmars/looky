@@ -33,7 +33,7 @@ const benefits = [
 
 export function BusinessSection() {
   return (
-    <section id="business" className="relative py-24 sm:py-32 overflow-hidden">
+    <section id="business" className={cn("relative py-24 sm:py-32 overflow-hidden")}>
       {/* Subtle background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-foreground/[0.015] to-transparent pointer-events-none" />
 

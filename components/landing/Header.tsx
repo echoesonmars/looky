@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 import { RiMenuLine, RiCloseLine } from "react-icons/ri";
 
 const navLinks = [
@@ -11,8 +12,12 @@ const navLinks = [
   { label: "свайпы", href: "#swipe" },
 ];
 
+const ctaButtonClass =
+  "inline-flex items-center justify-center text-sm px-4 py-2 font-medium transition-all duration-150";
+
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: session, status } = useSession();
 
   return (
     <>
@@ -50,24 +55,75 @@ export function Header() {
 
           {/* CTA cell */}
           <div className="flex items-center justify-end gap-3">
-            <a
-              href="#solution"
-              className="hidden sm:inline-flex items-center text-sm px-4 py-2 font-medium transition-all duration-150"
-              style={{
-                background: "var(--grid-foreground)",
-                color: "var(--grid-on-foreground)",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = "var(--accent-orange)";
-                (e.currentTarget as HTMLElement).style.color = "#fff";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = "var(--grid-foreground)";
-                (e.currentTarget as HTMLElement).style.color = "var(--grid-on-foreground)";
-              }}
-            >
-              войти
-            </a>
+            {status === "loading" ? (
+              <span className="hidden sm:inline-block h-9 w-20 rounded-sm opacity-40" style={{ background: "var(--grid-border)" }} aria-hidden />
+            ) : session?.user ? (
+              <div className="hidden sm:flex items-center gap-3">
+                <span className="text-xs font-geist-secondary truncate max-w-40" style={{ color: "var(--grid-muted)" }} title={session.user.email ?? undefined}>
+                  {session.user.email ?? session.user.name ?? "аккаунт"}
+                </span>
+                <button
+                  type="button"
+                  className={`hidden sm:inline-flex ${ctaButtonClass}`}
+                  style={{
+                    background: "transparent",
+                    color: "var(--grid-foreground)",
+                    border: "1px solid var(--grid-border)",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--accent-orange)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--accent-orange)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--grid-border)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--grid-foreground)";
+                  }}
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                >
+                  выйти
+                </button>
+              </div>
+            ) : (
+              <div className="hidden sm:flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className={ctaButtonClass}
+                  style={{
+                    background: "var(--grid-foreground)",
+                    color: "var(--grid-on-foreground)",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = "var(--accent-orange)";
+                    (e.currentTarget as HTMLElement).style.color = "#fff";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = "var(--grid-foreground)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--grid-on-foreground)";
+                  }}
+                >
+                  войти
+                </Link>
+                <Link
+                  href="/register"
+                  className={`${ctaButtonClass} border`}
+                  style={{
+                    background: "transparent",
+                    color: "var(--grid-foreground)",
+                    borderColor: "var(--grid-border)",
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--accent-orange)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--accent-orange)";
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.borderColor = "var(--grid-border)";
+                    (e.currentTarget as HTMLElement).style.color = "var(--grid-foreground)";
+                  }}
+                >
+                  регистрация
+                </Link>
+              </div>
+            )}
             {/* Mobile hamburger */}
             <button
               className="sm:hidden p-2"
@@ -104,15 +160,44 @@ export function Header() {
                   {link.label}
                 </motion.a>
               ))}
-              <div className="p-5 px-6">
-                <a
-                  href="#solution"
-                  onClick={() => setMobileOpen(false)}
-                  className="block w-full text-center py-3 text-sm font-medium"
-                  style={{ background: "var(--grid-foreground)", color: "var(--grid-on-foreground)" }}
-                >
-                  войти
-                </a>
+              <div className="p-5 px-6 flex flex-col gap-2">
+                {session?.user ? (
+                  <>
+                    <p className="text-xs font-geist-secondary text-center truncate" style={{ color: "var(--grid-muted)" }}>
+                      {session.user.email ?? session.user.name}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMobileOpen(false);
+                        void signOut({ callbackUrl: "/" });
+                      }}
+                      className="block w-full text-center py-3 text-sm font-medium border"
+                      style={{ borderColor: "var(--grid-border)", color: "var(--grid-foreground)" }}
+                    >
+                      выйти
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="block w-full text-center py-3 text-sm font-medium"
+                      style={{ background: "var(--grid-foreground)", color: "var(--grid-on-foreground)" }}
+                    >
+                      войти
+                    </Link>
+                    <Link
+                      href="/register"
+                      onClick={() => setMobileOpen(false)}
+                      className="block w-full text-center py-3 text-sm font-medium border"
+                      style={{ borderColor: "var(--grid-border)", color: "var(--grid-foreground)" }}
+                    >
+                      регистрация
+                    </Link>
+                  </>
+                )}
               </div>
             </motion.nav>
           )}

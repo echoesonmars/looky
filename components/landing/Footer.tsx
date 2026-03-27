@@ -56,7 +56,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between gap-12 sm:gap-16 mb-16 sm:mb-24">
           
           {/* Brand Info */}
-          <div className="flex flex-col gap-6 max-w-sm">
+          <BlurFade delay={0} inView className="flex flex-col gap-6 max-w-sm">
             <Link href="/" className="flex items-center gap-1 group">
               <span className="text-2xl font-bold tracking-tight text-white group-hover:text-zinc-200 transition-colors">
                 LOOKY
@@ -83,12 +83,17 @@ export function Footer() {
                 </motion.a>
               ))}
             </div>
-          </div>
+          </BlurFade>
 
           {/* Columns */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12 w-full md:w-auto flex-1 md:max-w-[600px]">
             {footerColumns.map((col, idx) => (
-              <div key={col.title} className="flex flex-col gap-4">
+              <div
+                key={col.title}
+                className="flex flex-col gap-4"
+                style={{ transitionDelay: `${idx * 40}ms` }}
+                data-col-index={idx}
+              >
                 <h3 className="text-xs font-semibold tracking-widest text-zinc-300 uppercase font-geist-secondary mb-1">
                   {col.title}
                 </h3>

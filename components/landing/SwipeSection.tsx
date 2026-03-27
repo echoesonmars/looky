@@ -41,7 +41,7 @@ function SwipeCard({
       {/* Like overlay */}
       <motion.div
         className="absolute top-5 left-5 z-10 px-3 py-1 border-2 text-sm font-bold rotate-[-15deg]"
-        style={{ opacity: likeOpacity, borderColor: "#22c55e", color: "#22c55e" } as React.CSSProperties}
+        style={{ opacity: likeOpacity, borderColor: "#22c55e", color: "#22c55e" }}
       >
         like ❤️
       </motion.div>
@@ -49,7 +49,7 @@ function SwipeCard({
       {/* Nope overlay */}
       <motion.div
         className="absolute top-5 right-5 z-10 px-3 py-1 border-2 text-sm font-bold rotate-15"
-        style={{ opacity: nopeOpacity, borderColor: "#ef4444", color: "#ef4444" } as React.CSSProperties}
+        style={{ opacity: nopeOpacity, borderColor: "#ef4444", color: "#ef4444" }}
       >
         nope ✕
       </motion.div>
