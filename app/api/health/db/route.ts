@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabase";
 
-/**
- * Verifies Supabase env + optional `items` table readability (anon + RLS).
- */
+/** Health check: env + optional `items` table count. */
 export async function GET() {
   try {
     const supabase = getSupabase();
@@ -24,7 +22,7 @@ export async function GET() {
       {
         ok: false,
         error: e instanceof Error ? e.message : String(e),
-        hint: "Copy .env.example to .env.local and set Supabase keys",
+        hint: "Configure .env.local from .env.example",
       },
       { status: 503 }
     );

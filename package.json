@@ -6,11 +6,16 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "dotenv -e .env.local -- node scripts/run-prisma.cjs generate",
+    "db:push": "dotenv -e .env.local -- node scripts/run-prisma.cjs db push",
+    "db:migrate": "dotenv -e .env.local -- node scripts/run-prisma.cjs migrate dev",
+    "db:studio": "dotenv -e .env.local -- node scripts/run-prisma.cjs studio"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/client": "6.19.2",
+    "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.100.1",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
@@ -36,6 +41,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.14",
     "prisma": "6.19.2",

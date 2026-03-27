@@ -32,7 +32,7 @@ function LoginForm() {
     })
     setPending(false)
     if (res?.error) {
-      setError("Неверный email или пароль.")
+      setError("Неверная почта или пароль.")
       return
     }
     router.push(callbackUrl)
@@ -44,12 +44,9 @@ function LoginForm() {
       className="border p-6 sm:p-8"
       style={{ borderColor: "var(--grid-border)", background: "color-mix(in oklab, var(--grid-cell-bg) 95%, transparent)" }}
     >
-      <h1 className="text-2xl font-bold tracking-tight mb-1" style={{ color: "var(--grid-foreground)" }}>
+      <h1 className="text-2xl font-bold tracking-tight mb-6" style={{ color: "var(--grid-foreground)" }}>
         Вход
       </h1>
-      <p className="text-sm font-geist-secondary mb-6" style={{ color: "var(--grid-muted)" }}>
-        Email и пароль. Без Supabase Auth — только NextAuth.
-      </p>
 
       {registered && (
         <p className="text-sm font-geist-secondary mb-4" style={{ color: "var(--accent-orange)" }}>
@@ -59,7 +56,7 @@ function LoginForm() {
 
       <form onSubmit={onSubmit} className="flex flex-col gap-4">
         <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Почта</Label>
           <Input
             id="email"
             name="email"
