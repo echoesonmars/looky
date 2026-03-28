@@ -1,7 +1,15 @@
+"use client"
+
 import { clothingTipFromWeather, weatherConditionLabel } from "@/lib/home-weather-tip"
 import type { HomeWeatherResult } from "@/lib/weather"
 
-export function HomeDayContext({ weather }: { weather: HomeWeatherResult }) {
+export function HomeDayContext({
+  weather,
+  locationHint,
+}: {
+  weather: HomeWeatherResult
+  locationHint?: string | null
+}) {
   const code = weather.ok ? weather.weatherCode : null
   const temp = weather.ok ? weather.tempC : null
   const label = weatherConditionLabel(code)
@@ -36,6 +44,11 @@ export function HomeDayContext({ weather }: { weather: HomeWeatherResult }) {
         <p className="mt-5 max-w-2xl text-sm font-geist-secondary leading-relaxed sm:text-base" style={{ color: "var(--grid-foreground)" }}>
           {tip}
         </p>
+        {locationHint ? (
+          <p className="mt-4 text-xs font-geist-secondary leading-relaxed" style={{ color: "var(--grid-muted)" }}>
+            {locationHint}
+          </p>
+        ) : null}
       </div>
     </section>
   )

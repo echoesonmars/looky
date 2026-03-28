@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 
 import { wearPlaceholderHints } from "@/lib/home-weather-tip"

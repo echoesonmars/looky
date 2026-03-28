@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 
 import { weatherSuggestsOuterLayer } from "@/lib/home-weather-tip"
