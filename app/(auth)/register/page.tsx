@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -36,8 +37,18 @@ export default function RegisterPage() {
         setError(data.error ?? "Ошибка регистрации.")
         return
       }
-      router.push("/login?registered=1")
-      router.refresh()
+      const signRes = await signIn("credentials", {
+        email: email.toLowerCase().trim(),
+        password,
+        redirect: false,
+        callbackUrl: "/home",
+      })
+      if (signRes?.error) {
+        router.push("/login?registered=1&callbackUrl=/home")
+        router.refresh()
+        return
+      }
+      window.location.assign("/home")
     } catch {
       setError("Не удалось отправить запрос.")
     } finally {
@@ -122,7 +133,7 @@ export default function RegisterPage() {
 
       <p className="mt-6 text-sm font-geist-secondary text-center" style={{ color: "var(--grid-muted)" }}>
         Уже есть аккаунт?{" "}
-        <Link href="/login" className="font-medium underline-offset-4 hover:underline" style={{ color: "var(--accent-orange)" }}>
+        <Link href="/login?callbackUrl=/home" className="font-medium underline-offset-4 hover:underline" style={{ color: "var(--accent-orange)" }}>
           Войти
         </Link>
       </p>

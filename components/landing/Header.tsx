@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { RiMenuLine, RiCloseLine } from "react-icons/ri";
 
 const navLinks = [
@@ -41,6 +41,13 @@ export function Header() {
 
           {/* Nav cell - desktop */}
           <div className="hidden sm:flex items-center justify-center gap-8">
+            <Link
+              href="/home"
+              className="text-sm tracking-tight font-geist-secondary transition-colors duration-150 hover:text-(--grid-foreground)"
+              style={{ color: "var(--grid-muted)" }}
+            >
+              приложение
+            </Link>
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -59,11 +66,8 @@ export function Header() {
               <span className="hidden sm:inline-block h-9 w-20 rounded-sm opacity-40" style={{ background: "var(--grid-border)" }} aria-hidden />
             ) : session?.user ? (
               <div className="hidden sm:flex items-center gap-3">
-                <span className="text-xs font-geist-secondary truncate max-w-40" style={{ color: "var(--grid-muted)" }} title={session.user.email ?? undefined}>
-                  {session.user.email ?? session.user.name ?? "аккаунт"}
-                </span>
-                <button
-                  type="button"
+                <Link
+                  href="/profile"
                   className={`hidden sm:inline-flex ${ctaButtonClass}`}
                   style={{
                     background: "transparent",
@@ -78,15 +82,14 @@ export function Header() {
                     (e.currentTarget as HTMLElement).style.borderColor = "var(--grid-border)";
                     (e.currentTarget as HTMLElement).style.color = "var(--grid-foreground)";
                   }}
-                  onClick={() => signOut({ callbackUrl: "/" })}
                 >
-                  выйти
-                </button>
+                  профиль
+                </Link>
               </div>
             ) : (
               <div className="hidden sm:flex items-center gap-2">
                 <Link
-                  href="/login"
+                  href="/login?callbackUrl=/home"
                   className={ctaButtonClass}
                   style={{
                     background: "var(--grid-foreground)",
@@ -146,6 +149,22 @@ export function Header() {
               className="sm:hidden overflow-hidden border-t"
               style={{ borderColor: "var(--grid-border)" }}
             >
+              <motion.div
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0 }}
+                className="border-b"
+                style={{ borderColor: "var(--grid-border)" }}
+              >
+                <Link
+                  href="/home"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center px-6 py-4 text-sm font-geist-secondary transition-colors hover:text-(--grid-foreground)"
+                  style={{ color: "var(--grid-muted)" }}
+                >
+                  приложение
+                </Link>
+              </motion.div>
               {navLinks.map((link, i) => (
                 <motion.a
                   key={link.href}
@@ -153,7 +172,7 @@ export function Header() {
                   onClick={() => setMobileOpen(false)}
                   initial={{ opacity: 0, x: -8 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: (i + 1) * 0.05 }}
                   className="flex items-center border-b px-6 py-4 text-sm font-geist-secondary transition-colors hover:text-(--grid-foreground)"
                   style={{ borderColor: "var(--grid-border)", color: "var(--grid-muted)" }}
                 >
@@ -162,26 +181,18 @@ export function Header() {
               ))}
               <div className="p-5 px-6 flex flex-col gap-2">
                 {session?.user ? (
-                  <>
-                    <p className="text-xs font-geist-secondary text-center truncate" style={{ color: "var(--grid-muted)" }}>
-                      {session.user.email ?? session.user.name}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMobileOpen(false);
-                        void signOut({ callbackUrl: "/" });
-                      }}
-                      className="block w-full text-center py-3 text-sm font-medium border"
-                      style={{ borderColor: "var(--grid-border)", color: "var(--grid-foreground)" }}
-                    >
-                      выйти
-                    </button>
-                  </>
+                  <Link
+                    href="/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className="block w-full text-center py-3 text-sm font-medium border"
+                    style={{ borderColor: "var(--grid-border)", color: "var(--grid-foreground)" }}
+                  >
+                    профиль
+                  </Link>
                 ) : (
                   <>
                     <Link
-                      href="/login"
+                      href="/login?callbackUrl=/home"
                       onClick={() => setMobileOpen(false)}
                       className="block w-full text-center py-3 text-sm font-medium"
                       style={{ background: "var(--grid-foreground)", color: "var(--grid-on-foreground)" }}

@@ -2,17 +2,21 @@
 
 import { useState, Suspense } from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
+function safeAppCallbackPath(raw: string | null): string {
+  if (raw && raw.startsWith("/") && !raw.startsWith("//")) return raw
+  return "/home"
+}
+
 function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/"
+  const callbackUrl = safeAppCallbackPath(searchParams.get("callbackUrl"))
   const registered = searchParams.get("registered") === "1"
 
   const [email, setEmail] = useState("")
@@ -35,8 +39,7 @@ function LoginForm() {
       setError("Неверная почта или пароль.")
       return
     }
-    router.push(callbackUrl)
-    router.refresh()
+    window.location.assign(callbackUrl)
   }
 
   return (

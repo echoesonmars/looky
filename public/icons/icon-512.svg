@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <rect width="512" height="512" rx="108" fill="#0a0a0a"/>
+  <text x="256" y="312" text-anchor="middle" font-family="system-ui,sans-serif" font-size="138" font-weight="700" fill="#fafafa">looky</text>
+  <circle cx="412" cy="144" r="28" fill="#fb5607"/>
+</svg>
