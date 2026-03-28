@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client"
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined }
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient }
 
 /** Hosted Postgres often expects TLS; append sslmode if the URI omits it. */
 function withHostedPostgresSsl(url: string): string {
@@ -17,8 +17,21 @@ const prismaOptions = databaseUrl
   ? { datasources: { db: { url: databaseUrl } } as const }
   : undefined
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient(prismaOptions)
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma
+function createPrismaClient() {
+  return new PrismaClient(prismaOptions)
 }
+
+/**
+ * В dev после смены схемы Prisma глобальный синглтон мог остаться старым
+ * (без делегата wardrobeItem). Пересоздаём клиент, если модели нет.
+ */
+export const prisma: PrismaClient = (() => {
+  if (process.env.NODE_ENV !== "production") {
+    const existing = globalForPrisma.prisma
+    if (!existing || !("wardrobeItem" in existing)) {
+      globalForPrisma.prisma = createPrismaClient()
+    }
+    return globalForPrisma.prisma
+  }
+  return globalForPrisma.prisma ?? createPrismaClient()
+})()

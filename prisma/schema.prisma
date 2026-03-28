@@ -8,15 +8,27 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
+  id             String         @id @default(cuid())
+  name           String?
+  email          String?        @unique
+  emailVerified  DateTime?
+  image          String?
   /// Bcrypt hash; only for email/password (Credentials)
-  password      String?
-  accounts      Account[]
-  sessions      Session[]
+  password       String?
+  accounts       Account[]
+  sessions       Session[]
+  wardrobeItems  WardrobeItem[]
+}
+
+model WardrobeItem {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  category  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
 }
 
 model Account {

@@ -1,31 +1,48 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 
-import { AppPageHeader } from "@/components/app/AppPageHeader"
-import { Button } from "@/components/ui/button"
+import { auth } from "@/auth"
+import { HomeActionQueue } from "@/components/app/home/HomeActionQueue"
+import { HomeDayContext } from "@/components/app/home/HomeDayContext"
+import { HomeGreeting } from "@/components/app/home/HomeGreeting"
+import { HomeWardrobeStatus } from "@/components/app/home/HomeWardrobeStatus"
+import { HomeWearGrid } from "@/components/app/home/HomeWearGrid"
+import type { WardrobeSummary } from "@/lib/wardrobe-queries"
+import { getWardrobeSummary } from "@/lib/wardrobe-queries"
+import { getHomeWeather } from "@/lib/weather"
+
+const emptyWardrobeSummary: WardrobeSummary = { count: 0, lastAddedAt: null, recent: [], loadError: null }
 
 export const metadata: Metadata = {
   title: "Главная",
 }
 
-export default function HomeAppPage() {
+export const dynamic = "force-dynamic"
+
+export default async function HomeAppPage() {
+  const session = await auth()
+  const userId = session?.user?.id
+
+  const [weather, summary] = await Promise.all([
+    getHomeWeather(),
+    userId ? getWardrobeSummary(userId) : Promise.resolve(emptyWardrobeSummary),
+  ])
+
+  const code = weather.ok ? weather.weatherCode : null
+  const temp = weather.ok ? weather.tempC : null
+  const loggedIn = Boolean(userId)
+
   return (
-    <>
-      <AppPageHeader
-        title="Главная"
-        description="Быстрые действия и скоро — персональный дайджест гардероба."
+    <div className="space-y-8 sm:space-y-10">
+      <HomeGreeting />
+      <HomeDayContext weather={weather} />
+      <HomeWearGrid recent={summary.recent} weatherCode={code} tempC={temp} loggedIn={loggedIn} />
+      <HomeWardrobeStatus
+        count={summary.count}
+        lastAddedAt={summary.lastAddedAt}
+        loggedIn={loggedIn}
+        loadError={summary.loadError}
       />
-      <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
-        <Button asChild className="h-12 min-h-11 justify-center" style={{ background: "var(--grid-foreground)", color: "var(--grid-on-foreground)" }}>
-          <Link href="/try-on">Примерка</Link>
-        </Button>
-        <Button asChild variant="outline" className="h-12 min-h-11 justify-center border" style={{ borderColor: "var(--grid-border)" }}>
-          <Link href="/stylist">Стилист</Link>
-        </Button>
-      </div>
-      <p className="mt-8 text-sm font-geist-secondary border-t pt-6" style={{ borderColor: "var(--grid-border)", color: "var(--grid-muted)" }}>
-        Сводки и подсказки по гардеробу появятся здесь.
-      </p>
-    </>
+      <HomeActionQueue wardrobeCount={summary.count} weatherCode={code} loggedIn={loggedIn} />
+    </div>
   )
 }
