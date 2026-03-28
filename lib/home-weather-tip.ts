@@ -36,6 +36,27 @@ export function clothingTipFromWeather(weatherCode: number | null, tempC: number
   return "Сбалансируйте комфорт и контекст дня — один акцент в образе достаточно."
 }
 
+/** Одна короткая строка для компактного UI (bento и т.п.). */
+export function clothingTipShort(weatherCode: number | null, tempC: number | null): string {
+  const t = tempC ?? 15
+  const code = weatherCode ?? 1
+  const cold = t < 5
+  const cool = t >= 5 && t < 12
+  const mild = t >= 12 && t < 20
+  const warm = t >= 20
+  const rain =
+    (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95 && code <= 99)
+  const snow = (code >= 71 && code <= 77) || code === 85 || code === 86
+  const storm = code >= 95
+  if (storm) return "Плотный верх, устойчивая обувь."
+  if (snow || cold) return "Теплый слой и куртка с запасом."
+  if (rain) return "Водостойкий верх, надёжная обувь."
+  if (cool) return "Лёгкий слой + накидка на снятие."
+  if (mild) return "Один слой, куртка на вечер."
+  if (warm) return "Дышащие ткани, минимум слоёв."
+  return "Один акцент в образе — достаточно."
+}
+
 export function weatherSuggestsOuterLayer(weatherCode: number | null): boolean {
   if (weatherCode === null) return false
   const rain =
@@ -59,26 +80,26 @@ export function wearPlaceholderHints(
   if (outer) {
     hints.push({
       title: "Верхний слой",
-      hint: "Плащ или пальто под погоду — соберите образ от защиты от непогоды.",
+      hint: "Плащ или пальто под погоду.",
     })
   } else if (warm) {
     hints.push({
       title: "Лёгкий верх",
-      hint: "Лён или хлопок — без лишнего веса в тёплый день.",
+      hint: "Лён или хлопок.",
     })
   } else {
     hints.push({
       title: "Базовый верх",
-      hint: "Нейтральная основа, к которой добавите акцент из гардероба.",
+      hint: "Нейтральная основа + акцент.",
     })
   }
   hints.push({
     title: "Обувь",
-    hint: "Одна пара на весь день — выберите по маршруту и погоде.",
+    hint: "Пара под маршрут и погоду.",
   })
   hints.push({
     title: "Акцент",
-    hint: "Шарф, ремень или украшение — завершите образ одной деталью.",
+    hint: "Одна деталь завершает образ.",
   })
   return hints
 }

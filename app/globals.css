@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "leaflet/dist/leaflet.css";
 
 @font-face {
   font-family: 'Didact Gothic';
@@ -165,3 +166,29 @@
 /* Grid layout utilities */
 .grid-border { border-color: var(--grid-border); }
 .grid-cell { background: var(--grid-cell-bg); border-color: var(--grid-border); }
+
+/* Home weather Leaflet: чуть теплее тона, без размытия — тайлы чёткие */
+.home-weather-map .leaflet-container {
+  background: transparent;
+  font-family: inherit;
+}
+.home-weather-map .leaflet-tile-pane {
+  filter: sepia(0.08) hue-rotate(-6deg) saturate(1.02) contrast(1.04);
+  opacity: 1;
+}
+.home-weather-map .leaflet-control-attribution {
+  font-size: 9px;
+  line-height: 1.2;
+  max-width: 50%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.65;
+  border-radius: 4px;
+  padding: 2px 6px;
+  background: color-mix(in oklab, var(--grid-cell-bg) 85%, transparent) !important;
+  color: var(--grid-muted) !important;
+}
+.home-weather-map .leaflet-control-attribution a {
+  color: var(--accent-orange);
+}
