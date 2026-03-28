@@ -25,6 +25,20 @@ async function fetchWeatherDefault(): Promise<HomeWeatherResult> {
   return normalizeWeather(j)
 }
 
+function requestGeolocation(): Promise<GeolocationPosition> {
+  return new Promise((resolve, reject) => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      reject(new Error("no_geolocation"))
+      return
+    }
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: true,
+      maximumAge: 60_000,
+      timeout: 20_000,
+    })
+  })
+}
+
 export function useHomeWeather() {
   const [weather, setWeather] = useState<HomeWeatherResult | null>(null)
   const [geoLoading, setGeoLoading] = useState(false)
@@ -40,42 +54,35 @@ export function useHomeWeather() {
     }
   }, [])
 
+  const tryGeolocation = useCallback(async () => {
+    try {
+      setGeoLoading(true)
+      const pos = await requestGeolocation()
+      const lat = pos.coords.latitude
+      const lon = pos.coords.longitude
+      setUserLat(lat)
+      setUserLon(lon)
+      try {
+        const w = await fetchWeatherByCoords(lat, lon)
+        setWeather(w)
+      } catch {
+        /* оставляем текущий прогноз */
+      }
+    } catch {
+      /* тихий фолбэк — уже есть default */
+    } finally {
+      setGeoLoading(false)
+    }
+  }, [])
+
   useEffect(() => {
     void loadDefault()
-  }, [loadDefault])
-
-  const loadByGeolocation = useCallback(() => {
-    if (typeof navigator === "undefined" || !navigator.geolocation) {
-      return
-    }
-    setGeoLoading(true)
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const lat = pos.coords.latitude
-        const lon = pos.coords.longitude
-        setUserLat(lat)
-        setUserLon(lon)
-        void (async () => {
-          try {
-            const w = await fetchWeatherByCoords(lat, lon)
-            setWeather(w)
-          } catch {
-            /* keep current */
-          } finally {
-            setGeoLoading(false)
-          }
-        })()
-      },
-      () => {
-        setGeoLoading(false)
-      },
-      { enableHighAccuracy: true, maximumAge: 60_000, timeout: 20_000 },
-    )
-  }, [])
+    void tryGeolocation()
+  }, [loadDefault, tryGeolocation])
 
   const code = weather?.ok ? weather.weatherCode : null
   const temp = weather?.ok ? weather.tempC : null
   const showSkeleton = weather === null
 
-  return { weather, geoLoading, loadByGeolocation, code, temp, showSkeleton, userLat, userLon }
+  return { weather, geoLoading, code, temp, showSkeleton, userLat, userLon }
 }

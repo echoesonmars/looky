@@ -1,7 +1,6 @@
 "use client"
 
 import dynamic from "next/dynamic"
-import { RiMapPinLine } from "react-icons/ri"
 
 import { HomeActionQueue } from "./HomeActionQueue"
 import { HomeDayContext } from "./HomeDayContext"
@@ -19,7 +18,7 @@ const HomeWeatherMap = dynamic(() => import("./HomeWeatherMap").then((m) => m.Ho
 })
 
 export function HomeBento({ summary, loggedIn }: { summary: WardrobeSummary; loggedIn: boolean }) {
-  const { weather, geoLoading, loadByGeolocation, code, temp, showSkeleton, userLat, userLon } = useHomeWeather()
+  const { weather, geoLoading, code, temp, showSkeleton, userLat, userLon } = useHomeWeather()
   const hasUserMap = userLat !== null && userLon !== null
 
   return (
@@ -50,30 +49,23 @@ export function HomeBento({ summary, loggedIn }: { summary: WardrobeSummary; log
               <div className="flex flex-1 flex-col gap-5" aria-busy="true" aria-label="Загрузка">
                 <div className="h-16 w-28 animate-pulse rounded-lg opacity-40" style={{ background: "var(--grid-border)" }} />
                 <div className="h-5 w-48 max-w-full animate-pulse rounded opacity-30" style={{ background: "var(--grid-border)" }} />
-                <div className="mt-auto flex w-full justify-start">
-                  <div className="h-10 w-28 animate-pulse rounded-full opacity-35" style={{ background: "var(--grid-border)" }} />
-                </div>
+                {geoLoading ? (
+                  <div className="mt-auto h-1 max-w-28 overflow-hidden rounded-full opacity-40" style={{ background: "var(--grid-border)" }} aria-hidden />
+                ) : null}
               </div>
             ) : (
               <>
                 <HomeDayContext weather={weather} />
-                <div className="mt-auto flex flex-wrap items-center justify-start gap-2 pt-5">
-                  <button
-                    type="button"
-                    onClick={() => loadByGeolocation()}
-                    disabled={geoLoading}
-                    className="group/geo inline-flex min-h-11 shrink-0 items-center gap-2.5 rounded-full border px-5 py-2.5 text-sm font-medium transition-[border-color,background-color,box-shadow,transform] hover:border-[color-mix(in_oklab,var(--accent-orange)_35%,var(--grid-border))] hover:bg-[color-mix(in_oklab,var(--grid-cell-bg)_82%,var(--accent-orange))] hover:shadow-[0_2px_10px_color-mix(in_oklab,var(--accent-orange)_10%,transparent)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 sm:text-base"
-                    style={{
-                      borderColor: "var(--grid-border)",
-                      color: "var(--grid-foreground)",
-                      background: "color-mix(in oklab, var(--grid-cell-bg) 88%, transparent)",
-                    }}
-                    aria-label="Прогноз рядом с вами"
-                  >
-                    <RiMapPinLine className="size-5 shrink-0 transition-transform duration-200 group-hover/geo:scale-110 sm:size-[1.35rem]" style={{ color: "var(--accent-orange)" }} aria-hidden />
-                    {geoLoading ? "…" : "Рядом"}
-                  </button>
-                </div>
+                {geoLoading ? (
+                  <div className="mt-auto pt-5" aria-live="polite" aria-busy="true">
+                    <div className="h-1 max-w-28 overflow-hidden rounded-full" style={{ background: "var(--grid-border)" }}>
+                      <div
+                        className="h-full w-1/3 animate-pulse rounded-full"
+                        style={{ background: "var(--accent-orange)" }}
+                      />
+                    </div>
+                  </div>
+                ) : null}
               </>
             )}
           </div>

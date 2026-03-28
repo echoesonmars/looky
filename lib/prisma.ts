@@ -27,11 +27,12 @@ function createPrismaClient() {
  */
 export const prisma: PrismaClient = (() => {
   if (process.env.NODE_ENV !== "production") {
-    const existing = globalForPrisma.prisma
-    if (!existing || !("wardrobeItem" in existing)) {
-      globalForPrisma.prisma = createPrismaClient()
+    let client = globalForPrisma.prisma
+    if (!client || !("wardrobeItem" in client)) {
+      client = createPrismaClient()
+      globalForPrisma.prisma = client
     }
-    return globalForPrisma.prisma
+    return client
   }
   return globalForPrisma.prisma ?? createPrismaClient()
 })()
