@@ -11,7 +11,6 @@ export function HeroSection() {
       className="w-full max-w-6xl mx-auto border-x border-b"
       style={{ borderColor: "var(--grid-border)", background: "var(--grid-cell-bg)" }}
     >
-      {/* Top label row */}
       <div className="border-b px-6 sm:px-8 py-4 flex items-center gap-3" style={{ borderColor: "var(--grid-border)" }}>
         <span
           className="text-[11px] tracking-widest uppercase font-geist-secondary"
@@ -26,10 +25,7 @@ export function HeroSection() {
           transition={{ duration: 2, repeat: Infinity }}
         />
       </div>
-
-      {/* Main hero grid */}
       <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] min-h-[66vh] overflow-hidden">
-        {/* Dot pattern bg */}
         <DotPattern
           width={24}
           height={24}
@@ -38,7 +34,6 @@ export function HeroSection() {
           style={{ color: "var(--grid-border)" }}
         />
 
-        {/* Left: content */}
         <div className="relative z-10 flex flex-col justify-end p-6 sm:p-8 lg:p-10 gap-7">
           <BlurFade delay={0.1} inView direction="up">
             <h1
@@ -91,7 +86,6 @@ export function HeroSection() {
           </BlurFade>
         </div>
 
-        {/* Right: accent column */}
         <div
           className="hidden md:flex flex-col border-l w-56"
           style={{ borderColor: "var(--grid-border)" }}

@@ -164,7 +164,6 @@ export function WardrobePhotoAnalyzeFlow() {
           <p className="text-xs font-geist-secondary" style={{ color: "var(--grid-muted)" }}>
             Исходник
           </p>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={previewSrc} alt="" className="max-h-48 w-full rounded-lg border object-contain" style={{ borderColor: "var(--grid-border)" }} />
         </div>
       ) : null}
@@ -187,7 +186,6 @@ export function WardrobePhotoAnalyzeFlow() {
                   }}
                 >
                   <input type="checkbox" className="sr-only" checked={row.selected} onChange={() => toggleCrop(i)} />
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={src} alt="" className="h-24 w-20 rounded-md object-cover" />
                   <span
                     className="absolute right-1 top-1 flex size-5 items-center justify-center rounded border text-[10px] font-bold"

@@ -38,7 +38,6 @@ function SwipeCard({
         className="h-full w-full border"
         style={{ borderColor: "var(--grid-border)", background: "var(--grid-cell-bg)" }}
       >
-      {/* Like overlay */}
       <motion.div
         className="absolute top-5 left-5 z-10 px-3 py-1 border-2 text-sm font-bold rotate-[-15deg]"
         style={{ opacity: likeOpacity, borderColor: "#22c55e", color: "#22c55e" }}
@@ -46,15 +45,12 @@ function SwipeCard({
         like ❤️
       </motion.div>
 
-      {/* Nope overlay */}
       <motion.div
         className="absolute top-5 right-5 z-10 px-3 py-1 border-2 text-sm font-bold rotate-15"
         style={{ opacity: nopeOpacity, borderColor: "#ef4444", color: "#ef4444" }}
       >
         nope ✕
       </motion.div>
-
-      {/* Card content */}
       <div className="flex flex-col items-center justify-center h-full gap-5 p-8">
         <div
           className="w-20 h-20 flex items-center justify-center text-4xl border"
@@ -106,7 +102,6 @@ export function SwipeSection() {
       className="w-full max-w-6xl mx-auto border-x border-b"
       style={{ borderColor: "var(--grid-border)", background: "var(--grid-cell-bg)" }}
     >
-      {/* Header row */}
       <div className="border-b grid grid-cols-[auto_1fr]" style={{ borderColor: "var(--grid-border)" }}>
         <div
           className="px-6 sm:px-8 py-4 border-r text-[11px] tracking-widest uppercase font-geist-secondary"
@@ -123,9 +118,7 @@ export function SwipeSection() {
         </div>
       </div>
 
-      {/* Content: 2-column */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-px" style={{ background: "var(--grid-border)" }}>
-        {/* Left: text */}
         <div className="p-6 sm:p-8 lg:p-10 flex flex-col gap-8 bg-(--grid-cell-bg)">
           <BlurFade delay={0.1} inView>
             <p className="text-lg sm:text-xl leading-[1.35] font-geist-secondary max-w-xl" style={{ color: "var(--grid-muted)" }}>
@@ -161,11 +154,9 @@ export function SwipeSection() {
           </div>
         </div>
 
-        {/* Right: card stack demo */}
         <BlurFade delay={0.2} inView className="bg-(--grid-cell-bg)">
           <div className="p-6 sm:p-8 lg:p-10 flex flex-col items-center gap-7 h-full">
             <div className="relative w-64 h-80">
-              {/* Background stack tiles */}
               {stack
                 .slice(0, -1)
                 .reverse()
@@ -183,7 +174,6 @@ export function SwipeSection() {
                   />
                 ))}
 
-              {/* Top draggable card or empty state */}
               <AnimatePresence mode="popLayout">
                 {stack.length > 0 && topCard ? (
                   <motion.div
@@ -213,7 +203,6 @@ export function SwipeSection() {
                     initial={{ scale: 0.9, opacity: 0 }}
                     transition={{ type: "spring", stiffness: 260, damping: 22 }}
                   >
-                    {/* Drag-based overlays */}
                     <SwipeCard
                       card={topCard}
                       zIndex={0}
@@ -242,7 +231,6 @@ export function SwipeSection() {
               </AnimatePresence>
             </div>
 
-            {/* Buttons */}
             <div className="flex items-center gap-5">
               <motion.button
                 onClick={() => handleSwipe("left")}

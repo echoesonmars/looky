@@ -10,6 +10,7 @@ import { getWardrobeItem, WARDROBE_DB_UNAVAILABLE_RU } from "@/lib/wardrobe-quer
 import { wardrobeCategoryLabel } from "@/lib/wardrobe-categories"
 import { WardrobeImageLightbox } from "@/components/wardrobe/WardrobeImageLightbox"
 import { WardrobeItemImage } from "@/components/wardrobe/WardrobeItemImage"
+import { WardrobeDeleteButton } from "@/components/wardrobe/WardrobeDeleteButton"
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -82,9 +83,12 @@ export default async function WardrobeItemPage({ params }: Props) {
           ))}
         </div>
       ) : null}
-      <Button asChild variant="outline" className="min-h-11 border" style={{ borderColor: "var(--grid-border)" }}>
-        <Link href="/wardrobe">← К гардеробу</Link>
-      </Button>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button asChild variant="outline" className="min-h-11 border" style={{ borderColor: "var(--grid-border)" }}>
+          <Link href="/wardrobe">← К гардеробу</Link>
+        </Button>
+        <WardrobeDeleteButton itemId={item.id} />
+      </div>
     </>
   )
 }

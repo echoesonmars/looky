@@ -91,6 +91,17 @@ export async function POST(req: Request) {
   }
 
   const supabase = createServiceRoleClient()
+
+  const { error: bucketErr } = await supabase.storage.createBucket(WARDROBE_BUCKET, {
+    public: true,
+    allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+    fileSizeLimit: 10 * 1024 * 1024,
+  })
+  if (bucketErr && !bucketErr.message.toLowerCase().includes("already exist")) {
+    console.error("[wardrobe/bucket] Could not create bucket:", bucketErr.message)
+    return Response.json({ error: "storage_bucket_error", detail: bucketErr.message }, { status: 502 })
+  }
+
   const created: { id: string; title: string; category: string; imageUrl: string | null; tags: string[] }[] = []
 
   for (let i = 0; i < crops.length; i++) {
@@ -105,6 +116,7 @@ export async function POST(req: Request) {
       upsert: false,
     })
     if (upErr) {
+      console.error("[wardrobe/upload] Supabase storage error:", upErr.message, upErr)
       return Response.json({ error: "storage_upload_failed", detail: upErr.message }, { status: 502 })
     }
 

@@ -1,23 +1,33 @@
 import type { Metadata } from "next"
-import Link from "next/link"
 
+import { auth } from "@/auth"
 import { AppPageHeader } from "@/components/app/AppPageHeader"
-import { Button } from "@/components/ui/button"
+import { TryOnCanvas } from "@/components/app/try-on/TryOnCanvas"
+import { prisma } from "@/lib/prisma"
 
 export const metadata: Metadata = {
   title: "Примерка",
 }
 
-export default function TryOnPage() {
+export default async function TryOnPage() {
+  const session = await auth()
+
+  const wardrobeItems = session?.user?.id
+    ? await prisma.wardrobeItem.findMany({
+        where: { userId: session.user.id },
+        orderBy: { createdAt: "desc" },
+        take: 40,
+        select: { id: true, title: true, category: true, imageUrl: true },
+      })
+    : []
+
   return (
     <>
       <AppPageHeader
         title="Примерка"
-        description="Наложение выбранной вещи на ваше фото — тяжёлый шаг, появится позже."
+        description="Загрузите фото, AI определит вашу позу и наложит одежду из гардероба."
       />
-      <Button asChild variant="outline" className="min-h-11 border" style={{ borderColor: "var(--grid-border)" }}>
-        <Link href="/home">← На главную приложения</Link>
-      </Button>
+      <TryOnCanvas wardrobeItems={wardrobeItems} />
     </>
   )
 }

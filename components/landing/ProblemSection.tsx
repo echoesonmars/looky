@@ -32,7 +32,6 @@ export function ProblemSection() {
       className="w-full max-w-6xl mx-auto border-x border-b"
       style={{ borderColor: "var(--grid-border)", background: "var(--grid-cell-bg)" }}
     >
-      {/* Header row */}
       <div className="border-b grid grid-cols-[auto_1fr] items-baseline" style={{ borderColor: "var(--grid-border)" }}>
         <div
           className="px-6 sm:px-8 py-4 border-r text-[11px] tracking-widest uppercase font-geist-secondary"
@@ -51,8 +50,6 @@ export function ProblemSection() {
           </BlurFade>
         </div>
       </div>
-
-      {/* Problem cards grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ background: "var(--grid-border)" }}>
         {problems.map((p, i) => (
           <BlurFade key={p.num} delay={0.1 + i * 0.1} inView>
@@ -89,7 +86,6 @@ export function ProblemSection() {
         ))}
       </div>
 
-      {/* Quote row */}
       <div
         className="border-t px-6 sm:px-8 py-8 sm:py-10"
         style={{ borderColor: "var(--grid-border)" }}

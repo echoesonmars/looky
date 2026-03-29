@@ -67,8 +67,6 @@ export function BentoGridSection() {
                   Система определяет ваш силуэт по фото и реалистично накладывает 2D-одежду. Никаких возвратов из-за &quot;не сидит&quot;.
                 </p>
               </div>
-
-              {/* Decorative Mockup */}
               <div className="relative z-20 mt-auto flex-1 bg-foreground/5 rounded-t-2xl border-x border-t border-border/60 overflow-hidden shrink-0 min-h-[170px]">
                 <BorderBeam size={100} duration={6} colorFrom="var(--accent-orange)" colorTo="var(--accent-yellow)" />
                 <div className="absolute inset-x-0 bottom-0 top-6 bg-background rounded-t-2xl border-t border-border/80 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] mx-6 p-4">

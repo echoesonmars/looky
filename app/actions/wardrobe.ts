@@ -7,6 +7,7 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { isPrismaConnectionError } from "@/lib/prisma-db-error"
 import { isWardrobeCategoryId } from "@/lib/wardrobe-categories"
+import { createServiceRoleClient, isServiceRoleConfigured } from "@/utils/supabase/service"
 
 export type CreateWardrobeState = { error?: string }
 
@@ -50,5 +51,47 @@ export async function createWardrobeItemAction(
 
   revalidatePath("/home")
   revalidatePath("/wardrobe")
+  redirect("/wardrobe")
+}
+
+export type DeleteWardrobeState = { error?: string }
+
+export async function deleteWardrobeItemAction(itemId: string): Promise<DeleteWardrobeState> {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return { error: "Войдите, чтобы удалить вещь." }
+  }
+
+  let imageUrl: string | null = null
+
+  try {
+    const item = await prisma.wardrobeItem.findFirst({
+      where: { id: itemId, userId: session.user.id },
+      select: { imageUrl: true },
+    })
+    if (!item) return { error: "Вещь не найдена." }
+    imageUrl = item.imageUrl
+    await prisma.wardrobeItem.delete({ where: { id: itemId } })
+  } catch (e) {
+    if (isPrismaConnectionError(e)) {
+      return { error: "Не удаётся подключиться к базе. Проверьте DATABASE_URL." }
+    }
+    throw e
+  }
+
+  if (imageUrl && isServiceRoleConfigured()) {
+    try {
+      const match = imageUrl.match(/\/wardrobe\/(.+)$/)
+      if (match) {
+        const supabase = createServiceRoleClient()
+        await supabase.storage.from("wardrobe").remove([match[1]])
+      }
+    } catch {
+      console.warn("[wardrobe/delete] storage cleanup failed for", imageUrl)
+    }
+  }
+
+  revalidatePath("/wardrobe")
+  revalidatePath("/home")
   redirect("/wardrobe")
 }

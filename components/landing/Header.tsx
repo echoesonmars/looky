@@ -26,7 +26,6 @@ export function Header() {
         style={{ borderColor: "var(--grid-border)", background: "color-mix(in oklab, var(--grid-cell-bg) 90%, transparent)" }}
       >
         <div className="grid grid-cols-[auto_1fr_auto] items-center px-6 sm:px-8 py-3.5">
-          {/* Logo cell */}
           <div className="flex items-center">
             <Link href="/" className="group flex items-center gap-1.5">
               <span className="text-lg font-bold tracking-tight" style={{ color: "var(--grid-foreground)" }}>
@@ -38,8 +37,6 @@ export function Header() {
               </span>
             </Link>
           </div>
-
-          {/* Nav cell - desktop */}
           <div className="hidden sm:flex items-center justify-center gap-8">
             <Link
               href="/home"
@@ -59,8 +56,6 @@ export function Header() {
               </a>
             ))}
           </div>
-
-          {/* CTA cell */}
           <div className="flex items-center justify-end gap-3">
             {status === "loading" ? (
               <span className="hidden sm:inline-block h-9 w-20 rounded-sm opacity-40" style={{ background: "var(--grid-border)" }} aria-hidden />
@@ -127,7 +122,6 @@ export function Header() {
                 </Link>
               </div>
             )}
-            {/* Mobile hamburger */}
             <button
               className="sm:hidden p-2"
               style={{ color: "var(--grid-foreground)" }}
@@ -137,8 +131,6 @@ export function Header() {
             </button>
           </div>
         </div>
-
-        {/* Mobile menu */}
         <AnimatePresence>
           {mobileOpen && (
             <motion.nav

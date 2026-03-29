@@ -20,7 +20,6 @@ export function TryOnSection() {
       className="w-full max-w-6xl mx-auto border-x border-b"
       style={{ borderColor: "var(--grid-border)", background: "var(--grid-cell-bg)" }}
     >
-      {/* Header row */}
       <div
         className="border-b grid grid-cols-[auto_1fr]"
         style={{ borderColor: "var(--grid-border)" }}
@@ -40,9 +39,7 @@ export function TryOnSection() {
         </div>
       </div>
 
-      {/* Content grid */}
       <div className="grid grid-cols-1 md:grid-cols-2">
-        {/* Left: text */}
         <div
           className="p-8 sm:p-12 border-b md:border-b-0 md:border-r flex flex-col gap-8"
           style={{ borderColor: "var(--grid-border)" }}
@@ -90,7 +87,6 @@ export function TryOnSection() {
           </BlurFade>
         </div>
 
-        {/* Right: visual */}
         <BlurFade delay={0.2} inView>
           <div className="relative p-8 sm:p-12 min-h-[360px] flex items-center justify-center">
             <div

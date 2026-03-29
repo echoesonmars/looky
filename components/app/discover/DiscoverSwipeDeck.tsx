@@ -127,6 +127,7 @@ export function DiscoverSwipeDeck() {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [lastDir, setLastDir] = useState<"left" | "right" | null>(null)
+  const [swipedCount, setSwipedCount] = useState(0)
   const poppedIdsRef = useRef(new Set<string>())
   const prefetchingRef = useRef(false)
   const swipeLockRef = useRef(false)
@@ -197,6 +198,7 @@ export function DiscoverSwipeDeck() {
         poppedIdsRef.current.add(top.id)
         postSwipe(top.id, dir === "right")
         setLastDir(dir)
+        setSwipedCount((n) => n + 1)
         window.setTimeout(() => {
           setQueue((current) => {
             swipeLockRef.current = false
@@ -304,29 +306,37 @@ export function DiscoverSwipeDeck() {
       </div>
 
       {queue.length > 0 ? (
-        <div className="flex items-center justify-center gap-6 pb-1">
-          <motion.button
-            type="button"
-            aria-label="Нет"
-            onClick={() => handleSwipe("left")}
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
-            className="flex h-14 w-14 items-center justify-center rounded-full border-2 sm:h-16 sm:w-16"
-            style={{ borderColor: "#ef4444", color: "#ef4444" }}
-          >
-            <RiCloseLine className="h-7 w-7" />
-          </motion.button>
-          <motion.button
-            type="button"
-            aria-label="Нравится"
-            onClick={() => handleSwipe("right")}
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.94 }}
-            className="flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-16"
-            style={{ background: "var(--accent-orange)", color: "#fff" }}
-          >
-            <RiHeartLine className="h-7 w-7" />
-          </motion.button>
+        <div className="flex flex-col items-center gap-3 pb-1">
+          <p className="text-xs font-geist-secondary" style={{ color: "var(--grid-muted)" }}>
+            перетащите карточку или нажмите кнопку
+            {swipedCount > 0 ? (
+              <span className="ml-2 opacity-60">· {swipedCount} свайпнуто</span>
+            ) : null}
+          </p>
+          <div className="flex items-center gap-6">
+            <motion.button
+              type="button"
+              aria-label="Нет"
+              onClick={() => handleSwipe("left")}
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.94 }}
+              className="flex h-14 w-14 items-center justify-center rounded-full border-2 sm:h-16 sm:w-16"
+              style={{ borderColor: "#ef4444", color: "#ef4444" }}
+            >
+              <RiCloseLine className="h-7 w-7" />
+            </motion.button>
+            <motion.button
+              type="button"
+              aria-label="Нравится"
+              onClick={() => handleSwipe("right")}
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.94 }}
+              className="flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-16"
+              style={{ background: "var(--accent-orange)", color: "#fff" }}
+            >
+              <RiHeartLine className="h-7 w-7" />
+            </motion.button>
+          </div>
         </div>
       ) : null}
     </div>

@@ -34,11 +34,9 @@ const benefits = [
 export function BusinessSection() {
   return (
     <section id="business" className={cn("relative py-24 sm:py-32 overflow-hidden")}>
-      {/* Subtle background */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-foreground/[0.015] to-transparent pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Header */}
         <BlurFade delay={0} inView>
           <div className="flex items-center gap-3 mb-6">
             <span
@@ -68,8 +66,6 @@ export function BusinessSection() {
             </p>
           </BlurFade>
         </div>
-
-        {/* Benefit cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-16">
           {benefits.map((b, i) => (
             <BlurFade key={b.title} delay={0.1 + i * 0.13} inView>
@@ -80,7 +76,6 @@ export function BusinessSection() {
                 gradientColor="rgba(251,86,7,0.1)"
               >
                 <div className="flex flex-col gap-4 h-full">
-                  {/* Stat */}
                   <div>
                     <motion.p
                       className="text-3xl font-bold mb-0.5"
@@ -115,8 +110,6 @@ export function BusinessSection() {
             </BlurFade>
           ))}
         </div>
-
-        {/* CTA banner */}
         <BlurFade delay={0.45} inView>
           <div
             id="cta"

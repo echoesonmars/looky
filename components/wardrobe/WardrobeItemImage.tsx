@@ -24,7 +24,6 @@ export function WardrobeItemImage({
   if (imageUrl) {
     return (
       <div className={`relative ${box}`} style={borderStyle}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={imageUrl}
           alt={title}

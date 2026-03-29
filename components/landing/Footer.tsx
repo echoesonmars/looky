@@ -46,7 +46,6 @@ export function Footer() {
 
   return (
     <footer className="relative border-t border-border/10 bg-black pt-16 sm:pt-24 pb-8 overflow-hidden text-zinc-400">
-      {/* Background effect */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-20">
         <Meteors number={30} className="hidden sm:block" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-neutral-900 via-black to-black" />
@@ -54,8 +53,6 @@ export function Footer() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
         <div className="flex flex-col md:flex-row justify-between gap-12 sm:gap-16 mb-16 sm:mb-24">
-          
-          {/* Brand Info */}
           <BlurFade delay={0} inView className="flex flex-col gap-6 max-w-sm">
             <Link href="/" className="flex items-center gap-1 group">
               <span className="text-2xl font-bold tracking-tight text-white group-hover:text-zinc-200 transition-colors">
@@ -84,8 +81,6 @@ export function Footer() {
               ))}
             </div>
           </BlurFade>
-
-          {/* Columns */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8 sm:gap-12 w-full md:w-auto flex-1 md:max-w-[600px]">
             {footerColumns.map((col, idx) => (
               <div
@@ -114,8 +109,6 @@ export function Footer() {
           </div>
 
         </div>
-
-        {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-8 border-t border-zinc-900">
           <p className="text-xs font-geist-secondary">
             © {new Date().getFullYear()} Looky. Все права защищены.

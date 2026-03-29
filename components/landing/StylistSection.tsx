@@ -15,9 +15,7 @@ export function StylistSection() {
       id="stylist"
       className="w-full max-w-6xl mx-auto border-x border-b"
       style={{ borderColor: "var(--grid-border)", background: "var(--grid-cell-bg)" }}
-    >
-      {/* Header row */}
-      <div
+    >      <div
         className="border-b grid grid-cols-[auto_1fr]"
         style={{ borderColor: "var(--grid-border)" }}
       >
@@ -35,16 +33,12 @@ export function StylistSection() {
           </BlurFade>
         </div>
       </div>
-
-      {/* Content grid */}
       <div className="grid grid-cols-1 md:grid-cols-2">
-        {/* Left: live UI mock */}
         <BlurFade delay={0.1} inView>
           <div
             className="p-8 sm:p-10 flex flex-col gap-4 border-b md:border-b-0 md:border-r"
             style={{ borderColor: "var(--grid-border)" }}
           >
-            {/* AI chat bubble mock */}
             <div className="flex items-center gap-3 mb-2">
               <div
                 className="w-8 h-8 border flex items-center justify-center"
@@ -65,7 +59,6 @@ export function StylistSection() {
               </motion.span>
             </div>
 
-            {/* Outfit items */}
             {[
               { emoji: "🧥", name: "свитер", delay: 0.2 },
               { emoji: "👖", name: "джинсы", delay: 0.35 },
@@ -93,7 +86,6 @@ export function StylistSection() {
               </motion.div>
             ))}
 
-            {/* Score */}
             <div
               className="flex items-center gap-3 justify-between pt-3 border-t"
               style={{ borderColor: "var(--grid-border)" }}
@@ -119,8 +111,6 @@ export function StylistSection() {
             </div>
           </div>
         </BlurFade>
-
-        {/* Right: text */}
         <div className="p-8 sm:p-12 flex flex-col gap-8 justify-center">
           <BlurFade delay={0.15} inView>
             <p className="text-base leading-relaxed font-geist-secondary" style={{ color: "var(--grid-muted)" }}>

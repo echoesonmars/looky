@@ -28,7 +28,6 @@ export function WardrobeImageLightbox({ src, alt }: { src: string; alt: string }
         style={{ borderColor: "var(--grid-border)" }}
         aria-label="Открыть фото"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt={alt} className="aspect-3/4 w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]" loading="eager" decoding="async" />
       </button>
 
@@ -41,7 +40,6 @@ export function WardrobeImageLightbox({ src, alt }: { src: string; alt: string }
           aria-modal="true"
           aria-label={alt}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
             alt={alt}
