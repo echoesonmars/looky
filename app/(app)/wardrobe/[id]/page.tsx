@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { formatRelativeRuPast } from "@/lib/format-relative-ru"
 import { getWardrobeItem, WARDROBE_DB_UNAVAILABLE_RU } from "@/lib/wardrobe-queries"
 import { wardrobeCategoryLabel } from "@/lib/wardrobe-categories"
+import { WardrobeImageLightbox } from "@/components/wardrobe/WardrobeImageLightbox"
+import { WardrobeItemImage } from "@/components/wardrobe/WardrobeItemImage"
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -51,10 +53,35 @@ export default async function WardrobeItemPage({ params }: Props) {
 
   return (
     <>
-      <AppPageHeader title={item.title} description={`${wardrobeCategoryLabel(item.category)} · добавлено ${formatRelativeRuPast(item.createdAt)}`} />
-      <p className="mb-6 text-sm font-geist-secondary leading-relaxed" style={{ color: "var(--grid-muted)" }}>
-        Карточка вещи: фото, состав и учёт носки — в следующих версиях.
-      </p>
+      <AppPageHeader
+        title={item.title}
+        description={`${wardrobeCategoryLabel(item.category)} · ${formatRelativeRuPast(item.createdAt)}`}
+      />
+      {item.source === "ai_photo" ? (
+        <p className="mb-3 text-xs font-geist-secondary" style={{ color: "var(--grid-muted)" }}>
+          Заполнено по фото
+        </p>
+      ) : null}
+      {item.imageUrl ? (
+        <WardrobeImageLightbox src={item.imageUrl} alt={item.title} />
+      ) : (
+        <div className="mb-6">
+          <WardrobeItemImage imageUrl={null} title={item.title} variant="hero" />
+        </div>
+      )}
+      {item.tags.length > 0 ? (
+        <div className="mb-6 flex flex-wrap gap-2">
+          {item.tags.map((t) => (
+            <span
+              key={t}
+              className="border px-2 py-1 text-xs font-geist-secondary"
+              style={{ borderColor: "var(--grid-border)", color: "var(--grid-muted)" }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+      ) : null}
       <Button asChild variant="outline" className="min-h-11 border" style={{ borderColor: "var(--grid-border)" }}>
         <Link href="/wardrobe">← К гардеробу</Link>
       </Button>

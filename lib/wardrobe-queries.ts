@@ -5,6 +5,9 @@ export type WardrobeItemRow = {
   id: string
   title: string
   category: string
+  imageUrl: string | null
+  tags: string[]
+  source: string | null
   createdAt: Date
 }
 
@@ -33,7 +36,15 @@ export async function getWardrobeSummary(userId: string): Promise<WardrobeSummar
         where: { userId },
         orderBy: { createdAt: "desc" },
         take: 3,
-        select: { id: true, title: true, category: true, createdAt: true },
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          imageUrl: true,
+          tags: true,
+          source: true,
+          createdAt: true,
+        },
       }),
       prisma.wardrobeItem.findFirst({
         where: { userId },
@@ -67,7 +78,15 @@ export async function getWardrobeItem(userId: string, id: string): Promise<GetWa
   try {
     const item = await prisma.wardrobeItem.findFirst({
       where: { id, userId },
-      select: { id: true, title: true, category: true, createdAt: true },
+      select: {
+        id: true,
+        title: true,
+        category: true,
+        imageUrl: true,
+        tags: true,
+        source: true,
+        createdAt: true,
+      },
     })
     return { ok: true, item }
   } catch (e) {
@@ -91,7 +110,15 @@ export async function listWardrobeItems(userId: string): Promise<ListWardrobeIte
     const items = await prisma.wardrobeItem.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
-      select: { id: true, title: true, category: true, createdAt: true },
+      select: {
+        id: true,
+        title: true,
+        category: true,
+        imageUrl: true,
+        tags: true,
+        source: true,
+        createdAt: true,
+      },
     })
     return { items, loadError: null }
   } catch (e) {

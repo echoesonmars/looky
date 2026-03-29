@@ -28,7 +28,7 @@ function createPrismaClient() {
 export const prisma: PrismaClient = (() => {
   if (process.env.NODE_ENV !== "production") {
     let client = globalForPrisma.prisma
-    if (!client || !("wardrobeItem" in client)) {
+    if (!client || !("catalogItem" in client)) {
       client = createPrismaClient()
       globalForPrisma.prisma = client
     }

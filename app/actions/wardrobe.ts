@@ -35,6 +35,7 @@ export async function createWardrobeItemAction(
         userId: session.user.id,
         title,
         category,
+        source: "manual",
       },
     })
   } catch (e) {

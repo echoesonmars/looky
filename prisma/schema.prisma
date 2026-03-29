@@ -18,17 +18,86 @@ model User {
   accounts       Account[]
   sessions       Session[]
   wardrobeItems  WardrobeItem[]
+  discoverSwipes DiscoverSwipe[]
+  userTagWeights UserTagWeight[]
+}
+
+model CatalogItem {
+  id            String           @id @default(cuid())
+  title         String
+  imageUrl      String?
+  category      String
+  isActive      Boolean          @default(true)
+  source        String?
+  createdAt     DateTime         @default(now())
+  tags          CatalogItemTag[]
+  swipes        DiscoverSwipe[]
+  wardrobeItems WardrobeItem[]
+
+  @@index([isActive, createdAt])
+}
+
+model Tag {
+  id        String           @id @default(cuid())
+  key       String           @unique
+  items     CatalogItemTag[]
+  weights   UserTagWeight[]
+}
+
+model CatalogItemTag {
+  catalogItemId String
+  tagId         String
+  catalogItem   CatalogItem @relation(fields: [catalogItemId], references: [id], onDelete: Cascade)
+  tag           Tag         @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([catalogItemId, tagId])
+  @@index([tagId])
+}
+
+model DiscoverSwipe {
+  id            String      @id @default(cuid())
+  userId        String
+  catalogItemId String
+  liked         Boolean
+  createdAt     DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catalogItem   CatalogItem @relation(fields: [catalogItemId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, catalogItemId])
+  @@index([userId, createdAt])
+}
+
+model UserTagWeight {
+  id     String @id @default(cuid())
+  userId String
+  tagId  String
+  weight Int    @default(0)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tagId])
+  @@index([userId])
 }
 
 model WardrobeItem {
-  id        String   @id @default(cuid())
-  userId    String
-  title     String
-  category  String
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String   @id @default(cuid())
+  userId        String
+  title         String
+  category      String
+  /// If added from discover feed, links to catalog row for dedup / provenance.
+  catalogItemId String?
+  /// Public URL after upload to Supabase Storage (bucket `wardrobe`).
+  imageUrl      String?
+  /// AI / user tags (e.g. color:black, style:casual).
+  tags          String[] @default([])
+  /// manual | discover | ai_photo
+  source        String?
+  createdAt     DateTime @default(now())
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  catalogItem   CatalogItem? @relation(fields: [catalogItemId], references: [id], onDelete: SetNull)
 
   @@index([userId, createdAt])
+  @@index([userId, catalogItemId])
 }
 
 model Account {

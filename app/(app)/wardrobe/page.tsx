@@ -7,6 +7,7 @@ import { formatRelativeRuPast } from "@/lib/format-relative-ru"
 import type { WardrobeItemRow } from "@/lib/wardrobe-queries"
 import { listWardrobeItems } from "@/lib/wardrobe-queries"
 import { wardrobeCategoryLabel } from "@/lib/wardrobe-categories"
+import { WardrobeItemImage } from "@/components/wardrobe/WardrobeItemImage"
 
 export const metadata: Metadata = {
   title: "Гардероб",
@@ -22,10 +23,7 @@ export default async function WardrobePage() {
 
   return (
     <>
-      <AppPageHeader
-        title="Гардероб"
-        description="Ваши вещи и скоро — теги и учёт носки."
-      />
+      <AppPageHeader title="Гардероб" />
       {!session?.user ? (
         <p className="mb-6 text-sm font-geist-secondary" style={{ color: "var(--grid-muted)" }}>
           <Link href="/login?callbackUrl=/wardrobe" className="underline-offset-4 hover:underline" style={{ color: "var(--accent-orange)" }}>
@@ -60,16 +58,24 @@ export default async function WardrobePage() {
             <li key={it.id}>
               <Link
                 href={`/wardrobe/${it.id}`}
-                className="flex flex-col gap-1 rounded-xl border p-4 transition-opacity hover:opacity-90 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-3 rounded-xl border p-4 transition-[background-color,box-shadow,border-color] hover:border-[color-mix(in_oklab,var(--grid-foreground)_12%,var(--grid-border))] hover:bg-[color-mix(in_oklab,var(--grid-cell-bg)_88%,var(--grid-foreground))] hover:shadow-sm active:scale-[0.99] sm:flex-row sm:items-center sm:justify-between"
                 style={{ borderColor: "var(--grid-border)", background: "color-mix(in oklab, var(--grid-cell-bg) 92%, transparent)" }}
               >
-                <div>
-                  <span className="font-medium" style={{ color: "var(--grid-foreground)" }}>
-                    {it.title}
-                  </span>
-                  <span className="mt-0.5 block text-xs font-geist-secondary sm:mt-0 sm:ml-2 sm:inline" style={{ color: "var(--grid-muted)" }}>
-                    {wardrobeCategoryLabel(it.category)}
-                  </span>
+                <div className="flex min-w-0 flex-1 items-start gap-3">
+                  <WardrobeItemImage imageUrl={it.imageUrl} title={it.title} variant="thumb" />
+                  <div className="min-w-0">
+                    <span className="font-medium" style={{ color: "var(--grid-foreground)" }}>
+                      {it.title}
+                    </span>
+                    <span className="mt-0.5 block text-xs font-geist-secondary sm:mt-0 sm:ml-2 sm:inline" style={{ color: "var(--grid-muted)" }}>
+                      {wardrobeCategoryLabel(it.category)}
+                    </span>
+                    {it.tags.length > 0 ? (
+                      <span className="mt-1 line-clamp-1 block text-[11px] font-geist-secondary" style={{ color: "var(--grid-muted)" }}>
+                        {it.tags.slice(0, 4).join(" · ")}
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
                 <span className="text-xs font-geist-secondary shrink-0" style={{ color: "var(--grid-muted)" }}>
                   {formatRelativeRuPast(it.createdAt)}
