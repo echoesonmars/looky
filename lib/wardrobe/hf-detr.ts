@@ -73,18 +73,48 @@ export async function hfObjectDetect(
 /** Браузер: тот же origin → `/api/hf-detect` → HF (токен только на сервере). */
 export async function hfObjectDetectViaProxy(imageBytes: ArrayBuffer, model: string): Promise<HfDetection[]> {
   const qs = new URLSearchParams({ model })
-  const res = await fetch(`/api/hf-detect?${qs}`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "Content-Type": "image/jpeg" },
-    body: imageBytes,
-  })
-  const data: unknown = await res.json().catch(() => ({}))
-  if (!res.ok) {
-    const err = typeof data === "object" && data !== null && "error" in data ? String((data as { error?: string }).error) : ""
-    throw new Error(err || `hf_proxy_${res.status}`)
+  
+  let attempts = 0
+  const maxAttempts = 5 // Увеличим число попыток, если HF долго думает
+  
+  while (attempts < maxAttempts) {
+    attempts++
+    const res = await fetch(`/api/hf-detect?${qs}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "image/jpeg" },
+      body: imageBytes,
+    })
+    
+    const data: unknown = await res.json().catch(() => ({}))
+    
+    if (!res.ok) {
+      if ((res.status === 503 || res.status === 502 || res.status === 504) && attempts < maxAttempts) {
+        // Пробуем извлечь detail, который прокидывает /api/hf-detect
+        let waitTime = 12000 // default wait
+        if (typeof data === "object" && data !== null && "detail" in data) {
+           const dString = String((data as { detail: string }).detail)
+           try {
+             const hfPayload = JSON.parse(dString)
+             if (typeof hfPayload.estimated_time === "number") {
+                waitTime = Math.max(5000, hfPayload.estimated_time * 1000 + 1000) // add 1s buffer
+             }
+           } catch { /* ignore */ }
+        }
+        // Wait and retry
+        await new Promise(r => setTimeout(r, waitTime))
+        continue
+      }
+      
+      const err = typeof data === "object" && data !== null && "error" in data ? String((data as { error?: string }).error) : ""
+      if (res.status === 503 || res.status === 502) throw new Error("hf_model_loading_timeout")
+      throw new Error(err || `hf_proxy_${res.status}`)
+    }
+    
+    return parseDetections(data)
   }
-  return parseDetections(data)
+  
+  throw new Error("hf_proxy_503")
 }
 
 export function parseAllowedLabels(raw: string | undefined): Set<string> {

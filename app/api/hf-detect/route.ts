@@ -39,20 +39,30 @@ export async function POST(req: Request) {
   const contentType = req.headers.get("content-type")?.trim() || "image/jpeg"
 
   const hfUrl = buildHfObjectDetectUrl(model)
-  const hfRes = await fetch(hfUrl, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": contentType,
-    },
-    body: buf,
-  })
+  let hfRes: Response
+  try {
+    hfRes = await fetch(hfUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": contentType,
+      },
+      body: buf,
+    })
+  } catch (e) {
+    return Response.json(
+      { error: "hf_network_error", detail: e instanceof Error ? e.message : String(e) },
+      { status: 502 }
+    )
+  }
 
   const text = await hfRes.text()
   if (!hfRes.ok) {
+    // Return the actual status so the client knows if it's 503 (Model Loading) or 429 (Rate Limit), etc.
+    const statusCode = hfRes.status >= 400 && hfRes.status < 600 ? hfRes.status : 502;
     return Response.json(
       { error: `hf_upstream_${hfRes.status}`, detail: text.slice(0, 400) },
-      { status: 502 },
+      { status: statusCode },
     )
   }
 
@@ -60,7 +70,7 @@ export async function POST(req: Request) {
   try {
     json = JSON.parse(text) as unknown
   } catch {
-    return Response.json({ error: "hf_invalid_json" }, { status: 502 })
+    return Response.json({ error: "hf_invalid_json" }, { status: 500 })
   }
 
   return Response.json(json)

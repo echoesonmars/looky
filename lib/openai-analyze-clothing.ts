@@ -66,8 +66,10 @@ export async function analyzeClothingCropsWithOpenAI(
 
   let parsed: unknown
   try {
-    parsed = JSON.parse(raw) as unknown
-  } catch {
+    const cleanRaw = raw.replace(/^```json/i, "").replace(/```$/i, "").trim()
+    parsed = JSON.parse(cleanRaw) as unknown
+  } catch (err) {
+    console.error("OpenAI JSON parse error on string:", raw)
     throw new Error("openai_invalid_json")
   }
 

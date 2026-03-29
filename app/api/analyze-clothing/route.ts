@@ -81,6 +81,7 @@ export async function POST(req: Request) {
       crops.map((c) => ({ base64: c.base64, mimeType: c.mimeType ?? "image/jpeg" })),
     )
   } catch (e) {
+    console.error("Analyze Clothing Error:", e)
     const msg = e instanceof Error ? e.message : "analyze_failed"
     return Response.json({ error: msg }, { status: 502 })
   }
